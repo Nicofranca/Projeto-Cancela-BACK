@@ -12,4 +12,5 @@ public interface RegistroCancelaRepository extends MongoRepository<RegistroCance
     List<RegistroCancela> findByEvento(String evento);
     long countByEvento(String evento);
     List<RegistroCancela> findByEventoContainingIgnoreCase(String texto);
+    List<RegistroCancela> findByEventoAndDataStartingWith(String evento, String data);
 }

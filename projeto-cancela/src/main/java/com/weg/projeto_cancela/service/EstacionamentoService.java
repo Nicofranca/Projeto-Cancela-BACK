@@ -4,7 +4,13 @@ import com.weg.projeto_cancela.model.RegistroCancela;
 import com.weg.projeto_cancela.repository.RegistroCancelaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EstacionamentoService {
@@ -40,5 +46,43 @@ public class EstacionamentoService {
         }
 
         return (int) (CAPACIDADE_TOTAL - carrosDentro);
+    }
+
+    public Map<String, Long> entradasPorDia(){
+
+        String data = LocalDate.now(ZoneId.of("America/Sao_Paulo")).toString();
+
+        List<RegistroCancela> entradasDia = repository.findByEventoAndDataStartingWith("Carro Entrando", data);
+
+        long turno1 = 0;
+        long turno2 = 0;
+        long turno3 = 0;
+
+        for (RegistroCancela registro : entradasDia){
+            try {
+                String horaString = registro.getData().substring(11, 13);
+
+                int hora = Integer.parseInt(horaString);
+
+                if (hora >= 5 && hora < 14){
+                    turno1++;
+                } else if (hora >= 14 && hora < 23) {
+                    turno2++;
+                } else {
+                    turno3++;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        Map<String, Long> resumo = new HashMap<>();
+        resumo.put("total_dia", (long) entradasDia.size());
+        resumo.put("turno_manha", turno1);
+        resumo.put("turno_tarde", turno2);
+        resumo.put("turno_noite", turno3);
+
+        return resumo;
+
     }
 }
