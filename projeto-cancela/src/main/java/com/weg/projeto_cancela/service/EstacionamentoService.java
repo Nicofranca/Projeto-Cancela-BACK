@@ -85,4 +85,21 @@ public class EstacionamentoService {
         return resumo;
 
     }
+
+    public String gerarRelatorio(){
+
+        List<RegistroCancela> todosRegistros = repository.findAll();
+
+        StringBuilder exelData = new StringBuilder();
+
+        exelData.append("ID;Evento;Data;Local\n");
+
+        for (RegistroCancela registroCancela : todosRegistros){
+            exelData.append(registroCancela.getId()).append(";")
+                    .append(registroCancela.getEvento()).append(";")
+                    .append(registroCancela.getData()).append("\n");
+        }
+
+        return exelData.toString();
+    }
 }
