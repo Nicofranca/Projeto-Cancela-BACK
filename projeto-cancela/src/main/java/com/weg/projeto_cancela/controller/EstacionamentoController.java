@@ -70,7 +70,7 @@ public class EstacionamentoController {
 
     @GetMapping("/entradas/semana")
     public List<RegistroCancela> getEntradasSemana(){
-        return List.of();
+        return service.listarEntradasSemana();
     }
 
     @GetMapping("/semanapassada")

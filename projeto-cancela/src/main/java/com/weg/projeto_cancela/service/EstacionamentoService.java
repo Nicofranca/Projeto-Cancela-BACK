@@ -4,10 +4,11 @@ import com.weg.projeto_cancela.model.RegistroCancela;
 import com.weg.projeto_cancela.repository.RegistroCancelaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,11 +104,31 @@ public class EstacionamentoService {
     }
 
     public List<RegistroCancela> listarEntradasSemana(){
-        String ontem = LocalDate.now(ZoneId.of("America/Sao_Paulo"))
-                .minusDays(1)
-                .toString();
+        LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
 
-        return repository.findByEventoAndDataStartingWith("Carro Saindo", ontem);
+        LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        LocalDate segundaPassada = segundaAtual.minusWeeks(1);
+        LocalDate domingoPassado = segundaPassada.plusDays(6);
+
+        String dataInicio = segundaPassada.toString();
+        String dataFim = domingoPassado.toString() + "T23:59:59";
+
+        return repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim);
+    }
+
+    public List<RegistroCancela> listarSaidasSemana(){
+        LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+
+        LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        LocalDate segundaPassada = segundaAtual.minusWeeks(1);
+        LocalDate domingoPassado = segundaPassada.plusDays(6);
+
+        String dataInicio = segundaPassada.toString();
+        String dataFim = domingoPassado.toString() + "T23:59:59";
+
+        return repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim);
     }
 
 
