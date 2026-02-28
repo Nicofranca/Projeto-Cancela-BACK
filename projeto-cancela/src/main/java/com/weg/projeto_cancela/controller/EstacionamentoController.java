@@ -73,6 +73,11 @@ public class EstacionamentoController {
         return service.listarEntradasSemana();
     }
 
+    @GetMapping("/saidas/semana")
+    public List<RegistroCancela> getSaidasSemana(){
+        return service.listarSaidasSemana();
+    }
+
     @GetMapping("/semanapassada")
     public List<RegistroCancela> getEntradasPassada(){
         return List.of();

@@ -128,7 +128,7 @@ public class EstacionamentoService {
         String dataInicio = segundaPassada.toString();
         String dataFim = domingoPassado.toString() + "T23:59:59";
 
-        return repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim);
+        return repository.findByEventoAndDataBetween("Carro Saindo", dataInicio, dataFim);
     }
 
 
