@@ -103,7 +103,33 @@ public class EstacionamentoService {
         return repository.findByEventoAndDataStartingWith("Carro Saindo", ontem);
     }
 
-    public List<RegistroCancela> listarEntradasSemana(){
+    public List<RegistroCancela> listarEntradasSemana() {
+        LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+
+        LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        LocalDate domingoAtual = hoje.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+        String dataInicio = segundaAtual.toString();
+        String dataFim = domingoAtual.toString() + "T23:59:59";
+
+        return repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim);
+    }
+
+    public List<RegistroCancela> listarSaidasSemana() {
+        LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+
+        LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        LocalDate domingoAtual = hoje.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+        String dataInicio = segundaAtual.toString();
+        String dataFim = domingoAtual.toString() + "T23:59:59";
+
+        return repository.findByEventoAndDataBetween("Carro Saindo", dataInicio, dataFim);
+    }
+
+    public List<RegistroCancela> listarEntradasPassada(){
         LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
 
         LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
@@ -117,7 +143,7 @@ public class EstacionamentoService {
         return repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim);
     }
 
-    public List<RegistroCancela> listarSaidasSemana(){
+    public List<RegistroCancela> listarSaidasPassada(){
         LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
 
         LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));

@@ -55,8 +55,6 @@ public class EntradasController {
         return List.of();
     }
 
-
-
     @GetMapping(value = "/relatorio/excel", produces = "text/csv")
     public ResponseEntity<String> baixarExel(){
         String conteudo = service.gerarRelatorio();

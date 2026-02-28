@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/saidas")
+@RequestMapping("/api/saidas")
 @CrossOrigin(origins = "*")
 public class SaidasController {
     private EstacionamentoService service;
@@ -32,5 +32,10 @@ public class SaidasController {
     @GetMapping("/semana")
     public List<RegistroCancela> getSaidasSemana(){
         return service.listarSaidasSemana();
+    }
+
+    @GetMapping("/passada")
+    public List<RegistroCancela> getSaidasPassada(){
+        return service.listarSaidasPassada();
     }
 }
