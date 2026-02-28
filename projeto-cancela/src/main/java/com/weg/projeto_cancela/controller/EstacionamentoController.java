@@ -58,5 +58,39 @@ public class EstacionamentoController {
                 .body(conteudo);
     }
 
+    @GetMapping("/entradas/ontem")
+    public List<RegistroCancela> getEntradasOntem(){
+        return service.listarEntradasOntem();
+    }
+
+    @GetMapping("/saidas/ontem")
+    public List<RegistroCancela> getSaidasOntem(){
+        return service.listarSaidasOntem();
+    }
+
+    @GetMapping("/entradas/semana")
+    public List<RegistroCancela> getEntradasSemana(){
+        return List.of();
+    }
+
+    @GetMapping("/semanapassada")
+    public List<RegistroCancela> getEntradasPassada(){
+        return List.of();
+    }
+
+    @GetMapping("/turno/primeiro")
+    public List<RegistroCancela> getPrimeiroTurno(){
+        return List.of();
+    }
+
+    @GetMapping("/turno/segundo")
+    public List<RegistroCancela> getSegundoTurno(){
+        return List.of();
+    }
+
+    @GetMapping("/turno/terceiro")
+    public List<RegistroCancela> getTerceiroTurno(){
+        return List.of();
+    }
 
 }

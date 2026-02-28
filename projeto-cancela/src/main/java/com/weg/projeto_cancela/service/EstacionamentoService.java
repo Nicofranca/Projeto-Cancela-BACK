@@ -86,6 +86,32 @@ public class EstacionamentoService {
 
     }
 
+    public List<RegistroCancela> listarEntradasOntem(){
+        String ontem = LocalDate.now(ZoneId.of("America/Sao_Paulo"))
+                .minusDays(1)
+                .toString();
+
+        return repository.findByEventoAndDataStartingWith("Carro Entrando", ontem);
+    }
+
+    public List<RegistroCancela> listarSaidasOntem(){
+        String ontem = LocalDate.now(ZoneId.of("America/Sao_Paulo"))
+                .minusDays(1)
+                .toString();
+
+        return repository.findByEventoAndDataStartingWith("Carro Saindo", ontem);
+    }
+
+    public List<RegistroCancela> listarEntradasSemana(){
+        String ontem = LocalDate.now(ZoneId.of("America/Sao_Paulo"))
+                .minusDays(1)
+                .toString();
+
+        return repository.findByEventoAndDataStartingWith("Carro Saindo", ontem);
+    }
+
+
+
     public String gerarRelatorio(){
 
         List<RegistroCancela> todosRegistros = repository.findAll();
