@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +129,51 @@ public class EstacionamentoService {
         return repository.findByEventoAndDataBetween("Carro Saindo", dataInicio, dataFim);
     }
 
+    public List<RegistroCancela> filtrarPorHorario(List<RegistroCancela> registroCancelas, LocalTime inicio, LocalTime fim){
+        List<RegistroCancela> filtro = new ArrayList<>();
+
+        for (RegistroCancela r: registroCancelas){
+            try {
+                LocalTime horaRegistro = LocalTime.parse(r.getData().substring(11, 16));
+
+                if(!horaRegistro.isBefore(inicio) && !horaRegistro.isAfter(fim)){
+                    filtro.add(r);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return filtro;
+    }
+
+    public List<RegistroCancela> buscarEntradasTurno(int turno){
+        LocalDate dataAtual = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+        String dataHoje = dataAtual.toString();
+
+        if (turno == 1){
+            List<RegistroCancela> entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
+            return  filtrarPorHorario(entradasHoje, LocalTime.of(5, 0), LocalTime.of(14, 18));
+        } else if (turno == 2){
+            List<RegistroCancela> entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
+            return  filtrarPorHorario(entradasHoje, LocalTime.of(14, 24), LocalTime.of(23, 18));
+        } else if (turno == 3) {
+            String dataOntem = dataAtual.minusDays(1).toString();
+
+            List<RegistroCancela> entradasOntem = repository.findByEventoAndDataStartingWith("Carro Entrando", dataOntem);
+            List<RegistroCancela> entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
+
+            List<RegistroCancela> turno3 = new ArrayList<>();
+
+            turno3.addAll(filtrarPorHorario(entradasOntem, LocalTime.of(23, 24), LocalTime.of(23, 59)));
+            turno3.addAll(filtrarPorHorario(entradasHoje, LocalTime.of(0, 0), LocalTime.of(5, 0)));
+
+            return turno3;
+
+        }
+
+        return new ArrayList<>();
+    }
 
 
     public String gerarRelatorio(){
