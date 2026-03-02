@@ -21,16 +21,16 @@ public class TurnoController {
 
     @GetMapping("/primeiro")
     public List<RegistroCancela> getPrimeiroTurno(){
-        return List.of();
+        return service.buscarEntradasTurno(1);
     }
 
     @GetMapping("/segundo")
     public List<RegistroCancela> getSegundoTurno(){
-        return List.of();
+        return service.buscarEntradasTurno(2);
     }
 
     @GetMapping("/terceiro")
     public List<RegistroCancela> getTerceiroTurno(){
-        return List.of();
+        return service.buscarEntradasTurno(3);
     }
 }
