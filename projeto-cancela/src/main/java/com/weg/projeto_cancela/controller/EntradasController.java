@@ -52,7 +52,7 @@ public class EntradasController {
 
     @GetMapping("/semanapassada")
     public List<RegistroCancela> getEntradasPassada(){
-        return List.of();
+        return service.listarEntradasPassada();
     }
 
     @GetMapping(value = "/relatorio/excel", produces = "text/csv")
