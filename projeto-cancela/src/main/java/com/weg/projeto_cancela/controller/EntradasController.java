@@ -35,8 +35,8 @@ public class EntradasController {
         return service.calcularVagasDisponiveis();
     }
 
-    @GetMapping("/resumo/entradas/hoje")
-    public Map<String, Long> getResumoDia(){
+    @GetMapping("/hoje")
+    public Long getResumoDia(){
         return service.entradasPorDia();
     }
 

@@ -49,41 +49,11 @@ public class EstacionamentoService {
         return (int) (CAPACIDADE_TOTAL - carrosDentro);
     }
 
-    public Map<String, Long> entradasPorDia(){
+    public long entradasPorDia(){
 
         String data = LocalDate.now(ZoneId.of("America/Sao_Paulo")).toString();
 
-        List<RegistroCancela> entradasDia = repository.findByEventoAndDataStartingWith("Carro Entrando", data);
-
-        long turno1 = 0;
-        long turno2 = 0;
-        long turno3 = 0;
-
-        for (RegistroCancela registro : entradasDia){
-            try {
-                String horaString = registro.getData().substring(11, 13);
-
-                int hora = Integer.parseInt(horaString);
-
-                if (hora >= 5 && hora < 14){
-                    turno1++;
-                } else if (hora >= 14 && hora < 23) {
-                    turno2++;
-                } else {
-                    turno3++;
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        Map<String, Long> resumo = new HashMap<>();
-        resumo.put("total_dia", (long) entradasDia.size());
-        resumo.put("turno_manha", turno1);
-        resumo.put("turno_tarde", turno2);
-        resumo.put("turno_noite", turno3);
-
-        return resumo;
+        return repository.countByEventoAndDataStartingWith("Carro Entrando", data);
 
     }
 
