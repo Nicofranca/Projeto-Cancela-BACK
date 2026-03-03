@@ -36,7 +36,7 @@ public class EntradasController {
     }
 
     @GetMapping("/hoje")
-    public Long getResumoDia(){
+    public List<RegistroCancela> getResumoDia(){
         return service.entradasPorDia();
     }
 

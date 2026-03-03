@@ -31,7 +31,14 @@ public class EstacionamentoService {
     }
 
     public List<RegistroCancela> buscarSaidas(){
-        return repository.findByEvento("Carro Saindo");
+
+        List<RegistroCancela> listaCompleta = new ArrayList<>();
+
+        listaCompleta.addAll(repository.findByEvento("Botao"));
+
+        listaCompleta.addAll(repository.findByEvento("Carro Saindo"));
+
+        return listaCompleta;
     }
 
     public List<RegistroCancela> buscarAberturasPorBotao(){
@@ -51,11 +58,16 @@ public class EstacionamentoService {
         return (int) (CAPACIDADE_TOTAL - carrosDentro);
     }
 
-    public long entradasPorDia(){
+    public List<RegistroCancela> entradasPorDia(){
 
         String data = LocalDate.now(ZoneId.of("America/Sao_Paulo")).toString();
 
-        return repository.countByEventoAndDataStartingWith("Carro Entrando", data);
+        List<RegistroCancela> listaCompleta = new ArrayList<>();
+
+        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Carro Entrando", data));
+        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Botao Fisico", data));
+
+        return listaCompleta;
 
     }
 
@@ -64,7 +76,12 @@ public class EstacionamentoService {
                 .minusDays(1)
                 .toString();
 
-        return repository.findByEventoAndDataStartingWith("Carro Entrando", ontem);
+        List<RegistroCancela> listaCompleta = new ArrayList<>();
+
+        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Carro Entrando", ontem));
+        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Botao Fisico", ontem));
+
+        return listaCompleta;
     }
 
     public List<RegistroCancela> listarSaidasOntem(){
@@ -85,7 +102,12 @@ public class EstacionamentoService {
         String dataInicio = segundaAtual.toString();
         String dataFim = domingoAtual.toString() + "T23:59:59";
 
-        return repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim);
+        List<RegistroCancela> listaCompleta = new ArrayList<>();
+
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Botao", dataInicio, dataFim));
+
+        return listaCompleta;
     }
 
     public List<RegistroCancela> listarSaidasSemana() {
@@ -112,7 +134,12 @@ public class EstacionamentoService {
         String dataInicio = segundaPassada.toString();
         String dataFim = domingoPassado.toString() + "T23:59:59";
 
-        return repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim);
+        List<RegistroCancela> listaCompleta = new ArrayList<>();
+
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Botao", dataInicio, dataFim));
+
+        return listaCompleta;
     }
 
     public List<RegistroCancela> listarSaidasPassada(){
@@ -151,27 +178,29 @@ public class EstacionamentoService {
         LocalDate dataAtual = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
         String dataHoje = dataAtual.toString();
 
-        if (turno == 1){
-            List<RegistroCancela> entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
-            return  filtrarPorHorario(entradasHoje, LocalTime.of(5, 0), LocalTime.of(14, 18));
-        } else if (turno == 2){
-            List<RegistroCancela> entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
-            return  filtrarPorHorario(entradasHoje, LocalTime.of(14, 24), LocalTime.of(23, 18));
-        } else if (turno == 3) {
-            String dataOntem = dataAtual.minusDays(1).toString();
+        List<RegistroCancela> entradasHoje = new ArrayList<>();
 
-            List<RegistroCancela> entradasOntem = repository.findByEventoAndDataStartingWith("Carro Entrando", dataOntem);
-            List<RegistroCancela> entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
+        switch (turno){
+            case 1:
+                    entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
+                    return filtrarPorHorario(entradasHoje, LocalTime.of(5, 0), LocalTime.of(14, 18));
 
-            List<RegistroCancela> turno3 = new ArrayList<>();
+            case 2:
+                entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
+                return  filtrarPorHorario(entradasHoje, LocalTime.of(14, 24), LocalTime.of(23, 18));
+            case 3:
+                    String dataOntem = dataAtual.minusDays(1).toString();
 
-            turno3.addAll(filtrarPorHorario(entradasOntem, LocalTime.of(23, 24), LocalTime.of(23, 59)));
-            turno3.addAll(filtrarPorHorario(entradasHoje, LocalTime.of(0, 0), LocalTime.of(5, 0)));
+                    List<RegistroCancela> entradasOntem = repository.findByEventoAndDataStartingWith("Carro Entrando", dataOntem);
+                    entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
 
-            return turno3;
+                    List<RegistroCancela> turno3 = new ArrayList<>();
 
+                    turno3.addAll(filtrarPorHorario(entradasOntem, LocalTime.of(23, 24), LocalTime.of(23, 59)));
+                    turno3.addAll(filtrarPorHorario(entradasHoje, LocalTime.of(0, 0), LocalTime.of(5, 0)));
+
+                    return turno3;
         }
-
         return new ArrayList<>();
     }
 

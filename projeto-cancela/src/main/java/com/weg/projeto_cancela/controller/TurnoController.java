@@ -20,17 +20,32 @@ public class TurnoController {
     }
 
     @GetMapping("/primeiro")
-    public List<RegistroCancela> getPrimeiroTurno(){
+    public List<RegistroCancela> getEntradaPrimeiroTurno(){
         return service.buscarEntradasTurno(1);
     }
 
     @GetMapping("/segundo")
-    public List<RegistroCancela> getSegundoTurno(){
+    public List<RegistroCancela> getEntradaSegundoTurno(){
         return service.buscarEntradasTurno(2);
     }
 
     @GetMapping("/terceiro")
-    public List<RegistroCancela> getTerceiroTurno(){
+    public List<RegistroCancela> getEntradaTerceiroTurno(){
+        return service.buscarEntradasTurno(3);
+    }
+
+    @GetMapping("/saida/primeiro")
+    public List<RegistroCancela> getSaidaPrimeiroTurno(){
+        return service.buscarEntradasTurno(1);
+    }
+
+    @GetMapping("/saida/segundo")
+    public List<RegistroCancela> getSaidaSegundoTurno(){
+        return service.buscarEntradasTurno(2);
+    }
+
+    @GetMapping("/saida/terceiro")
+    public List<RegistroCancela> getSaidaTerceiroTurno(){
         return service.buscarEntradasTurno(3);
     }
 }
