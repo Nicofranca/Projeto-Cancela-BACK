@@ -29,7 +29,7 @@ public class EstacionamentoService {
     public List<RegistroCancela> buscarEntradas(){
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
-        listaCompleta.addAll(repository.findByEvento("Botao Fisico"));
+        listaCompleta.addAll(repository.findByEvento("Aberta por: Botao Fisico"));
 
         listaCompleta.addAll(repository.findByEvento("Carro Entrando"));
 
@@ -41,7 +41,7 @@ public class EstacionamentoService {
     }
 
     public List<RegistroCancela> buscarAberturasPorBotao(){
-        return repository.findByEventoContainingIgnoreCase("Botao Fisico");
+        return repository.findByEventoContainingIgnoreCase("Aberta por: Botao Fisico");
     }
 
     public int calcularVagasDisponiveis(){
@@ -64,7 +64,7 @@ public class EstacionamentoService {
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
         listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Carro Entrando", data));
-        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Botao Fisico", data));
+        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Aberta por: Botao Fisico", data));
 
         return listaCompleta;
 
@@ -78,7 +78,7 @@ public class EstacionamentoService {
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
         listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Carro Entrando", ontem));
-        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Botao Fisico", ontem));
+        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Aberta por: Botao Fisico", ontem));
 
         return listaCompleta;
     }
@@ -104,7 +104,7 @@ public class EstacionamentoService {
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
         listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim));
-        listaCompleta.addAll(repository.findByEventoAndDataBetween("Botao Fisico", dataInicio, dataFim));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Aberta por: Botao Fisico", dataInicio, dataFim));
 
         return listaCompleta;
     }
@@ -136,7 +136,7 @@ public class EstacionamentoService {
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
         listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim));
-        listaCompleta.addAll(repository.findByEventoAndDataBetween("Botao", dataInicio, dataFim));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Aberta por: Botao Fisico", dataInicio, dataFim));
 
         return listaCompleta;
     }
