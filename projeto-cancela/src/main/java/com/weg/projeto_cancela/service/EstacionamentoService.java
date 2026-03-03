@@ -29,7 +29,7 @@ public class EstacionamentoService {
     public List<RegistroCancela> buscarEntradas(){
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
-        listaCompleta.addAll(repository.findByEvento("Botao"));
+        listaCompleta.addAll(repository.findByEvento("Botao Fisico"));
 
         listaCompleta.addAll(repository.findByEvento("Carro Entrando"));
 
@@ -104,7 +104,7 @@ public class EstacionamentoService {
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
         listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim));
-        listaCompleta.addAll(repository.findByEventoAndDataBetween("Botao", dataInicio, dataFim));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Botao Fisico", dataInicio, dataFim));
 
         return listaCompleta;
     }
