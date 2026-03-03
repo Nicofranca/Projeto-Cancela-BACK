@@ -226,6 +226,35 @@ public class EstacionamentoService {
         return new ArrayList<>();
     }
 
+    public List<RegistroCancela> buscarSaidasTurno(int turno){
+        LocalDate dataAtual = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+        String dataHoje = dataAtual.toString();
+
+        List<RegistroCancela> saidasHoje;
+
+        switch (turno){
+            case 1:
+                saidasHoje = repository.findByEventoAndDataStartingWith("Carro Saindo", dataHoje);
+                return filtrarPorHorario(saidasHoje, LocalTime.of(5, 0), LocalTime.of(14, 18));
+
+            case 2:
+                saidasHoje = repository.findByEventoAndDataStartingWith("Carro Saindo", dataHoje);
+                return  filtrarPorHorario(saidasHoje, LocalTime.of(14, 24), LocalTime.of(23, 18));
+            case 3:
+                String dataOntem = dataAtual.minusDays(1).toString();
+
+                List<RegistroCancela> saidasOntem = repository.findByEventoAndDataStartingWith("Carro Saindo", dataOntem);
+                saidasHoje = repository.findByEventoAndDataStartingWith("Carro Saindo", dataHoje);
+
+                List<RegistroCancela> turno3 = new ArrayList<>();
+
+                turno3.addAll(filtrarPorHorario(saidasOntem, LocalTime.of(23, 24), LocalTime.of(23, 59)));
+                turno3.addAll(filtrarPorHorario(saidasHoje, LocalTime.of(0, 0), LocalTime.of(5, 0)));
+
+                return turno3;
+        }
+        return new ArrayList<>();
+    }
 
     public String gerarRelatorio(){
 

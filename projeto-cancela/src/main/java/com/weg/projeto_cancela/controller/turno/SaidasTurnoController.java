@@ -1,4 +1,4 @@
-package com.weg.projeto_cancela.controller;
+package com.weg.projeto_cancela.controller.turno;
 
 import com.weg.projeto_cancela.model.RegistroCancela;
 import com.weg.projeto_cancela.service.EstacionamentoService;
@@ -10,42 +10,28 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/turno")
+@RequestMapping("/api/turno/saidas")
 @CrossOrigin(origins = "*")
-public class TurnoController {
+public class SaidasTurnoController {
     private EstacionamentoService service;
 
-    public TurnoController(EstacionamentoService service){
+    public SaidasTurnoController(EstacionamentoService service){
         this.service = service;
     }
 
     @GetMapping("/primeiro")
     public List<RegistroCancela> getEntradaPrimeiroTurno(){
-        return service.buscarEntradasTurno(1);
+        return service.buscarSaidasTurno(1);
     }
 
     @GetMapping("/segundo")
     public List<RegistroCancela> getEntradaSegundoTurno(){
-        return service.buscarEntradasTurno(2);
+        return service.buscarSaidasTurno(2);
     }
 
     @GetMapping("/terceiro")
     public List<RegistroCancela> getEntradaTerceiroTurno(){
-        return service.buscarEntradasTurno(3);
+        return service.buscarSaidasTurno(3);
     }
 
-    @GetMapping("/saida/primeiro")
-    public List<RegistroCancela> getSaidaPrimeiroTurno(){
-        return service.buscarEntradasTurno(1);
-    }
-
-    @GetMapping("/saida/segundo")
-    public List<RegistroCancela> getSaidaSegundoTurno(){
-        return service.buscarEntradasTurno(2);
-    }
-
-    @GetMapping("/saida/terceiro")
-    public List<RegistroCancela> getSaidaTerceiroTurno(){
-        return service.buscarEntradasTurno(3);
-    }
 }
