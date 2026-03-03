@@ -37,7 +37,7 @@ public class EntradasController {
 
     @GetMapping("/hoje")
     public List<RegistroCancela> getResumoDia(){
-        return service.entradasPorDia();
+        return service.ListarEntradasHoje();
     }
 
     @GetMapping("/ontem")

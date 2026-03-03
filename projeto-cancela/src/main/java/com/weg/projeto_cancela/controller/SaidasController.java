@@ -24,6 +24,9 @@ public class SaidasController {
         return service.buscarSaidas();
     }
 
+    @GetMapping("/hoje")
+    public List<RegistroCancela> getSaidasHoje(){ return service.ListarSaidasHoje(); }
+
     @GetMapping("/ontem")
     public List<RegistroCancela> getSaidasOntem(){
         return service.listarSaidasOntem();
