@@ -27,18 +27,17 @@ public class EstacionamentoService {
     private final int CAPACIDADE_TOTAL = 1381;
 
     public List<RegistroCancela> buscarEntradas(){
-        return repository.findByEvento("Carro Entrando");
-    }
-
-    public List<RegistroCancela> buscarSaidas(){
-
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
         listaCompleta.addAll(repository.findByEvento("Botao"));
 
-        listaCompleta.addAll(repository.findByEvento("Carro Saindo"));
+        listaCompleta.addAll(repository.findByEvento("Carro Entrando"));
 
         return listaCompleta;
+    }
+
+    public List<RegistroCancela> buscarSaidas(){
+        return repository.findByEvento("Carro Saindo");
     }
 
     public List<RegistroCancela> buscarAberturasPorBotao(){
