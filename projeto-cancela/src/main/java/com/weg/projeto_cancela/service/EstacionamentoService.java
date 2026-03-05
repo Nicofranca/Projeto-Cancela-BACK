@@ -4,10 +4,7 @@ import com.weg.projeto_cancela.model.RegistroCancela;
 import com.weg.projeto_cancela.repository.RegistroCancelaRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -58,194 +55,158 @@ public class EstacionamentoService {
         return (int) (CAPACIDADE_TOTAL - carrosDentro);
     }
 
-    public List<RegistroCancela> ListarEntradasHoje(){
-
-        String data = LocalDate.now(ZoneId.of("America/Sao_Paulo")).toString();
-
+    public List<RegistroCancela> ListarEntradasHoje() {
+        String[] limites = obterLimitesDiaUTC(LocalDate.now(ZoneId.of("America/Sao_Paulo")));
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
-        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Carro Entrando", data));
-        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Aberta por: Botao Fisico", data));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", limites[0], limites[1]));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Aberta por: Botao Fisico", limites[0], limites[1]));
 
         return listaCompleta;
     }
 
-    public List<RegistroCancela> listarEntradasOntem(){
-        String ontem = LocalDate.now(ZoneId.of("America/Sao_Paulo"))
-                .minusDays(1)
-                .toString();
-
+    public List<RegistroCancela> listarEntradasOntem() {
+        String[] limites = obterLimitesDiaUTC(LocalDate.now(ZoneId.of("America/Sao_Paulo")).minusDays(1));
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
-        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Carro Entrando", ontem));
-        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Aberta por: Botao Fisico", ontem));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", limites[0], limites[1]));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Aberta por: Botao Fisico", limites[0], limites[1]));
 
         return listaCompleta;
     }
 
-    public List<RegistroCancela> ListarSaidasHoje(){
-
-        String data = LocalDate.now(ZoneId.of("America/Sao_Paulo")).toString();
-
-        List<RegistroCancela> listaCompleta = new ArrayList<>();
-
-        listaCompleta.addAll(repository.findByEventoAndDataStartingWith("Carro Saindo", data));
-
-        return listaCompleta;
-
+    public List<RegistroCancela> ListarSaidasHoje() {
+        String[] limites = obterLimitesDiaUTC(LocalDate.now(ZoneId.of("America/Sao_Paulo")));
+        return repository.findByEventoAndDataBetween("Carro Saindo", limites[0], limites[1]);
     }
 
-    public List<RegistroCancela> listarSaidasOntem(){
-        String ontem = LocalDate.now(ZoneId.of("America/Sao_Paulo"))
-                .minusDays(1)
-                .toString();
-
-        return repository.findByEventoAndDataStartingWith("Carro Saindo", ontem);
+    public List<RegistroCancela> listarSaidasOntem() {
+        String[] limites = obterLimitesDiaUTC(LocalDate.now(ZoneId.of("America/Sao_Paulo")).minusDays(1));
+        return repository.findByEventoAndDataBetween("Carro Saindo", limites[0], limites[1]);
     }
 
     public List<RegistroCancela> listarEntradasSemana() {
         LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-
         LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-
         LocalDate domingoAtual = hoje.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
-        String dataInicio = segundaAtual.toString();
-        String dataFim = domingoAtual.toString() + "T23:59:59";
-
+        String[] limites = obterLimitesPeriodoUTC(segundaAtual, domingoAtual);
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
-        listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim));
-        listaCompleta.addAll(repository.findByEventoAndDataBetween("Aberta por: Botao Fisico", dataInicio, dataFim));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", limites[0], limites[1]));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Aberta por: Botao Fisico", limites[0], limites[1]));
 
         return listaCompleta;
     }
 
     public List<RegistroCancela> listarSaidasSemana() {
         LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-
         LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-
         LocalDate domingoAtual = hoje.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
-        String dataInicio = segundaAtual.toString();
-        String dataFim = domingoAtual.toString() + "T23:59:59";
-
-        return repository.findByEventoAndDataBetween("Carro Saindo", dataInicio, dataFim);
+        String[] limites = obterLimitesPeriodoUTC(segundaAtual, domingoAtual);
+        return repository.findByEventoAndDataBetween("Carro Saindo", limites[0], limites[1]);
     }
 
-    public List<RegistroCancela> listarEntradasPassada(){
+    public List<RegistroCancela> listarEntradasPassada() {
         LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-
-        LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-
-        LocalDate segundaPassada = segundaAtual.minusWeeks(1);
+        LocalDate segundaPassada = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
         LocalDate domingoPassado = segundaPassada.plusDays(6);
 
-        String dataInicio = segundaPassada.toString();
-        String dataFim = domingoPassado.toString() + "T23:59:59";
-
+        String[] limites = obterLimitesPeriodoUTC(segundaPassada, domingoPassado);
         List<RegistroCancela> listaCompleta = new ArrayList<>();
 
-        listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", dataInicio, dataFim));
-        listaCompleta.addAll(repository.findByEventoAndDataBetween("Aberta por: Botao Fisico", dataInicio, dataFim));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Carro Entrando", limites[0], limites[1]));
+        listaCompleta.addAll(repository.findByEventoAndDataBetween("Aberta por: Botao Fisico", limites[0], limites[1]));
 
         return listaCompleta;
     }
 
-    public List<RegistroCancela> listarSaidasPassada(){
+    public List<RegistroCancela> listarSaidasPassada() {
         LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-
-        LocalDate segundaAtual = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-
-        LocalDate segundaPassada = segundaAtual.minusWeeks(1);
+        LocalDate segundaPassada = hoje.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
         LocalDate domingoPassado = segundaPassada.plusDays(6);
 
-        String dataInicio = segundaPassada.toString();
-        String dataFim = domingoPassado.toString() + "T23:59:59";
-
-        return repository.findByEventoAndDataBetween("Carro Saindo", dataInicio, dataFim);
+        String[] limites = obterLimitesPeriodoUTC(segundaPassada, domingoPassado);
+        return repository.findByEventoAndDataBetween("Carro Saindo", limites[0], limites[1]);
     }
 
-    public List<RegistroCancela> filtrarPorHorario(List<RegistroCancela> registroCancelas, LocalTime inicio, LocalTime fim){
+    public List<RegistroCancela> filtrarPorHorario(List<RegistroCancela> registroCancelas, LocalTime inicio, LocalTime fim) {
         List<RegistroCancela> filtro = new ArrayList<>();
 
-        for (RegistroCancela r: registroCancelas){
+        for (RegistroCancela r : registroCancelas) {
             try {
-                LocalTime horaRegistro = LocalTime.parse(r.getData().substring(11, 16));
+                // Pega a string UTC do banco e converte para a hora EXATA no Brasil
+                ZonedDateTime dataUtc = ZonedDateTime.parse(r.getData());
+                LocalTime horaRegistro = dataUtc.withZoneSameInstant(ZoneId.of("America/Sao_Paulo")).toLocalTime();
 
-                if(!horaRegistro.isBefore(inicio) && !horaRegistro.isAfter(fim)){
+                if (!horaRegistro.isBefore(inicio) && !horaRegistro.isAfter(fim)) {
                     filtro.add(r);
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                System.err.println("Erro ao converter horário: " + e.getMessage());
             }
         }
-
         return filtro;
     }
 
-    public List<RegistroCancela> buscarEntradasTurno(int turno){
-        LocalDate dataAtual = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-        String dataHoje = dataAtual.toString();
+    private String[] obterLimitesDiaUTC(LocalDate dataBrasil) {
+        ZonedDateTime inicioBR = dataBrasil.atStartOfDay(ZoneId.of("America/Sao_Paulo"));
+        ZonedDateTime fimBR = dataBrasil.atTime(23, 59, 59, 999999999).atZone(ZoneId.of("America/Sao_Paulo"));
 
-        List<RegistroCancela> entradasHoje;
-        List<RegistroCancela> entradasBotaoHoje;
-        List<RegistroCancela> listaAll = new ArrayList<>();
+        return new String[]{
+                inicioBR.toInstant().toString(),
+                fimBR.toInstant().toString()
+        };
+    }
 
-        switch (turno){
+    // Auxiliar 2: Pega o início e o fim de um PERÍODO (ex: semana inteira) em UTC
+    private String[] obterLimitesPeriodoUTC(LocalDate dataInicioBR, LocalDate dataFimBR) {
+        ZonedDateTime inicioBR = dataInicioBR.atStartOfDay(ZoneId.of("America/Sao_Paulo"));
+        ZonedDateTime fimBR = dataFimBR.atTime(23, 59, 59, 999999999).atZone(ZoneId.of("America/Sao_Paulo"));
+
+        return new String[]{
+                inicioBR.toInstant().toString(),
+                fimBR.toInstant().toString()
+        };
+    }
+
+    public List<RegistroCancela> buscarEntradasTurno(int turno) {
+        // Busca tudo de hoje usando o método que já consertamos!
+        List<RegistroCancela> entradasHoje = ListarEntradasHoje();
+
+        switch (turno) {
             case 1:
-                listaAll.addAll(repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje));
-                listaAll.addAll(repository.findByEventoAndDataStartingWith("Aberta por: Botao Fisico", dataHoje));
-
-                return filtrarPorHorario(listaAll, LocalTime.of(5, 0), LocalTime.of(14, 18));
+                return filtrarPorHorario(entradasHoje, LocalTime.of(5, 0), LocalTime.of(14, 18));
 
             case 2:
-                listaAll.addAll(repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje));
-                listaAll.addAll(repository.findByEventoAndDataStartingWith("Aberta por: Botao Fisico", dataHoje));
-                return  filtrarPorHorario(listaAll, LocalTime.of(14, 24), LocalTime.of(23, 18));
+                return filtrarPorHorario(entradasHoje, LocalTime.of(14, 24), LocalTime.of(23, 18));
+
             case 3:
-                String dataOntem = dataAtual.minusDays(1).toString();
-
-                List<RegistroCancela> entradasOntem = repository.findByEventoAndDataStartingWith("Carro Entrando", dataOntem);
-                entradasHoje = repository.findByEventoAndDataStartingWith("Carro Entrando", dataHoje);
-
-                List<RegistroCancela> entradaBotaoOntem = repository.findByEventoAndDataStartingWith("Aberta por: Botao Fisico", dataOntem);
-                entradasBotaoHoje =repository.findByEventoAndDataStartingWith("Aberta por: Botao Fisico", dataHoje);
-
+                // Busca os de ontem para compor o turno da madrugada
+                List<RegistroCancela> entradasOntem = listarEntradasOntem();
                 List<RegistroCancela> turno3 = new ArrayList<>();
 
                 turno3.addAll(filtrarPorHorario(entradasOntem, LocalTime.of(23, 24), LocalTime.of(23, 59)));
                 turno3.addAll(filtrarPorHorario(entradasHoje, LocalTime.of(0, 0), LocalTime.of(5, 0)));
-
-                turno3.addAll(filtrarPorHorario(entradaBotaoOntem, LocalTime.of(23, 24), LocalTime.of(23, 59)));
-                turno3.addAll(filtrarPorHorario(entradasBotaoHoje, LocalTime.of(0, 0), LocalTime.of(5, 0)));
 
                 return turno3;
         }
         return new ArrayList<>();
     }
 
-    public List<RegistroCancela> buscarSaidasTurno(int turno){
-        LocalDate dataAtual = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
-        String dataHoje = dataAtual.toString();
+    public List<RegistroCancela> buscarSaidasTurno(int turno) {
+        List<RegistroCancela> saidasHoje = ListarSaidasHoje();
 
-        List<RegistroCancela> saidasHoje;
-
-        switch (turno){
+        switch (turno) {
             case 1:
-                saidasHoje = repository.findByEventoAndDataStartingWith("Carro Saindo", dataHoje);
                 return filtrarPorHorario(saidasHoje, LocalTime.of(5, 0), LocalTime.of(14, 18));
 
             case 2:
-                saidasHoje = repository.findByEventoAndDataStartingWith("Carro Saindo", dataHoje);
-                return  filtrarPorHorario(saidasHoje, LocalTime.of(14, 24), LocalTime.of(23, 18));
+                return filtrarPorHorario(saidasHoje, LocalTime.of(14, 24), LocalTime.of(23, 18));
+
             case 3:
-                String dataOntem = dataAtual.minusDays(1).toString();
-
-                List<RegistroCancela> saidasOntem = repository.findByEventoAndDataStartingWith("Carro Saindo", dataOntem);
-                saidasHoje = repository.findByEventoAndDataStartingWith("Carro Saindo", dataHoje);
-
+                List<RegistroCancela> saidasOntem = listarSaidasOntem();
                 List<RegistroCancela> turno3 = new ArrayList<>();
 
                 turno3.addAll(filtrarPorHorario(saidasOntem, LocalTime.of(23, 24), LocalTime.of(23, 59)));

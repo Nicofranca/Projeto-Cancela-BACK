@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/projeto-cancela.iml" filepath="$PROJECT_DIR$/.idea/projeto-cancela.iml" />
+      <module fileurl="file://$PROJECT_DIR$/projeto-cancela/projeto-cancela.iml" filepath="$PROJECT_DIR$/projeto-cancela/projeto-cancela.iml" />
     </modules>
   </component>
 </project>
