@@ -1,4 +1,4 @@
-package com.weg.projeto_cancela.model;
+package com.weg.projeto_cancela.domain.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,16 +12,13 @@ public class RegistroCancela {
     private String evento;
     private String data;
 
-    // Novos campos criados no Node-RED
-    @Field("data_formatada") // Garante que o Java ache o nome exato no banco
+    @Field("data_formatada")
     private String dataFormatada;
     private Integer hora;
 
-    // Construtor vazio (obrigatório para o Spring)
     public RegistroCancela() {
     }
 
-    // Construtor completo
     public RegistroCancela(String id, String evento, String data, String dataFormatada, Integer hora) {
         this.id = id;
         this.evento = evento;
@@ -30,7 +27,6 @@ public class RegistroCancela {
         this.hora = hora;
     }
 
-    // --- GETTERS E SETTERS ---
 
     public String getId() {
         return id;

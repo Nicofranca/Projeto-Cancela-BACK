@@ -1,13 +1,12 @@
-package com.weg.projeto_cancela.controller;
+package com.weg.projeto_cancela.infra.web.controller;
 
-import com.weg.projeto_cancela.model.RegistroCancela;
-import com.weg.projeto_cancela.service.EstacionamentoService;
+import com.weg.projeto_cancela.domain.model.RegistroCancela;
+import com.weg.projeto_cancela.application.service.EstacionamentoService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/entradas")

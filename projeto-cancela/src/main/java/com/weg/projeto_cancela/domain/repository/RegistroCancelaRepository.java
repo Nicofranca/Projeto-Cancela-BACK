@@ -1,6 +1,6 @@
-package com.weg.projeto_cancela.repository;
+package com.weg.projeto_cancela.domain.repository;
 
-import com.weg.projeto_cancela.model.RegistroCancela;
+import com.weg.projeto_cancela.domain.model.RegistroCancela;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package com.weg.projeto_cancela.controller;
+package com.weg.projeto_cancela.infra.web.controller;
 
-import com.weg.projeto_cancela.model.RegistroCancela;
-import com.weg.projeto_cancela.service.EstacionamentoService;
+import com.weg.projeto_cancela.domain.model.RegistroCancela;
+import com.weg.projeto_cancela.application.service.EstacionamentoService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

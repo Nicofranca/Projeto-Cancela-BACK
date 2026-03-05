@@ -1,16 +1,13 @@
-package com.weg.projeto_cancela.service;
+package com.weg.projeto_cancela.application.service;
 
-import com.weg.projeto_cancela.model.RegistroCancela;
-import com.weg.projeto_cancela.repository.RegistroCancelaRepository;
+import com.weg.projeto_cancela.domain.model.RegistroCancela;
+import com.weg.projeto_cancela.domain.repository.RegistroCancelaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class EstacionamentoService {
@@ -136,7 +133,7 @@ public class EstacionamentoService {
 
         for (RegistroCancela r : registroCancelas) {
             try {
-                // Pega a string UTC do banco e converte para a hora EXATA no Brasil
+                //Pega a UTC do banco e converte para o Brasil
                 ZonedDateTime dataUtc = ZonedDateTime.parse(r.getData());
                 LocalTime horaRegistro = dataUtc.withZoneSameInstant(ZoneId.of("America/Sao_Paulo")).toLocalTime();
 
@@ -160,7 +157,6 @@ public class EstacionamentoService {
         };
     }
 
-    // Auxiliar 2: Pega o início e o fim de um PERÍODO (ex: semana inteira) em UTC
     private String[] obterLimitesPeriodoUTC(LocalDate dataInicioBR, LocalDate dataFimBR) {
         ZonedDateTime inicioBR = dataInicioBR.atStartOfDay(ZoneId.of("America/Sao_Paulo"));
         ZonedDateTime fimBR = dataFimBR.atTime(23, 59, 59, 999999999).atZone(ZoneId.of("America/Sao_Paulo"));
@@ -172,7 +168,6 @@ public class EstacionamentoService {
     }
 
     public List<RegistroCancela> buscarEntradasTurno(int turno) {
-        // Busca tudo de hoje usando o método que já consertamos!
         List<RegistroCancela> entradasHoje = ListarEntradasHoje();
 
         switch (turno) {
@@ -183,7 +178,7 @@ public class EstacionamentoService {
                 return filtrarPorHorario(entradasHoje, LocalTime.of(14, 24), LocalTime.of(23, 18));
 
             case 3:
-                // Busca os de ontem para compor o turno da madrugada
+                // Busca ontem para compor o turno - "madrugada"
                 List<RegistroCancela> entradasOntem = listarEntradasOntem();
                 List<RegistroCancela> turno3 = new ArrayList<>();
 
