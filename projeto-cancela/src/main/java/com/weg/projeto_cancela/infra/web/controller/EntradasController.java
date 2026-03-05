@@ -1,7 +1,8 @@
 package com.weg.projeto_cancela.infra.web.controller;
 
+import com.weg.projeto_cancela.application.service.RelatorioService;
 import com.weg.projeto_cancela.domain.model.RegistroCancela;
-import com.weg.projeto_cancela.application.service.EstacionamentoService;
+import com.weg.projeto_cancela.application.service.EntradasService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,12 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class EntradasController {
 
-    private EstacionamentoService service;
+    private final EntradasService service;
+    private final RelatorioService relatorioService;
 
-    public EntradasController(EstacionamentoService service){
+    public EntradasController(EntradasService service, RelatorioService relatorioService){
         this.service = service;
+        this.relatorioService = relatorioService;
     }
 
     @GetMapping
@@ -56,7 +59,7 @@ public class EntradasController {
 
     @GetMapping(value = "/relatorio/excel", produces = "text/csv")
     public ResponseEntity<String> baixarExel(){
-        String conteudo = service.gerarRelatorio();
+        String conteudo = relatorioService.gerarRelatorio();
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=relatorio_cancela.csv");

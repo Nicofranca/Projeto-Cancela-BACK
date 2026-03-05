@@ -1,7 +1,7 @@
 package com.weg.projeto_cancela.infra.web.controller.turno;
 
 import com.weg.projeto_cancela.domain.model.RegistroCancela;
-import com.weg.projeto_cancela.application.service.EstacionamentoService;
+import com.weg.projeto_cancela.application.service.EntradasService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,9 +13,9 @@ import java.util.List;
 @RequestMapping("/api/turno/entradas")
 @CrossOrigin(origins = "*")
 public class EntradasTurnoController {
-    private EstacionamentoService service;
+    private EntradasService service;
 
-    public EntradasTurnoController(EstacionamentoService service){
+    public EntradasTurnoController(EntradasService service){
         this.service = service;
     }
 
