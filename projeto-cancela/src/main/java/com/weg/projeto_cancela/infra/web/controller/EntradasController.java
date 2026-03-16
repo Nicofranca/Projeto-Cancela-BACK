@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/entradas")
 @CrossOrigin(origins = "*")
-@Tag(name = "Entradas", description = "Endpoints para vizualização de entradas e baixar csv")
+@Tag(name = "Entradas")
 public class EntradasController {
 
     private final EntradasService service;
