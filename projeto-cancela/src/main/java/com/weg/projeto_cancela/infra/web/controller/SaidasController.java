@@ -6,6 +6,7 @@ import com.weg.projeto_cancela.application.service.EntradasService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/saidas")
 @CrossOrigin(origins = "*")
+@Tag(name = "Saidas")
 public class SaidasController {
     private SaidasService service;
 
